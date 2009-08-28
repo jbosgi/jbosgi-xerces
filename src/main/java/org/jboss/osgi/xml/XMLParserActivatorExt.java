@@ -23,6 +23,7 @@ package org.jboss.osgi.xml;
 
 //$Id$
 
+import java.util.Arrays;
 import java.util.Hashtable;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,6 +32,8 @@ import javax.xml.parsers.SAXParserFactory;
 import org.jboss.osgi.common.log.LogServiceTracker;
 import org.jboss.osgi.xml.internal.XMLParserActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.log.LogService;
 
@@ -116,18 +119,23 @@ public class XMLParserActivatorExt extends XMLParserActivator
       props.put(XMLParserCapability.PARSER_PROVIDER, XMLParserCapability.PROVIDER_JBOSS_OSGI);
    }
 
-   private void logSAXParserFactory(BundleContext context)
+   private void logSAXParserFactory(BundleContext context) throws InvalidSyntaxException
    {
-      ServiceReference saxRef = context.getServiceReference(SAXParserFactory.class.getName());
-      if (saxRef != null)
+      ServiceReference[] saxRefs = context.getServiceReferences(SAXParserFactory.class.getName(), null);
+      if (saxRefs != null)
       {
-         Object factory = context.getService(saxRef);
-         log.log(LogService.LOG_DEBUG, "SAXParserFactory: " + factory.getClass().getName());
-
-         for (String key : saxRef.getPropertyKeys())
+         for (ServiceReference sref : saxRefs)
          {
-            Object value = saxRef.getProperty(key);
-            log.log(LogService.LOG_DEBUG, "   " + key + "=" + value);
+            Object factory = context.getService(sref);
+            log.log(LogService.LOG_DEBUG, "SAXParserFactory: " + factory.getClass().getName());
+
+            for (String key : sref.getPropertyKeys())
+            {
+               Object value = sref.getProperty(key);
+               if (key.equals(Constants.OBJECTCLASS))
+                  value = Arrays.asList((String[])value);
+               log.log(LogService.LOG_DEBUG, "   " + key + "=" + value);
+            }
          }
       }
       else
@@ -136,18 +144,23 @@ public class XMLParserActivatorExt extends XMLParserActivator
       }
    }
 
-   private void logDOMParserFactory(BundleContext context)
+   private void logDOMParserFactory(BundleContext context) throws InvalidSyntaxException
    {
-      ServiceReference domRef = context.getServiceReference(DocumentBuilderFactory.class.getName());
-      if (domRef != null)
+      ServiceReference[] domRefs = context.getServiceReferences(DocumentBuilderFactory.class.getName(), null);
+      if (domRefs != null)
       {
-         Object factory = context.getService(domRef);
-         log.log(LogService.LOG_DEBUG, "DocumentBuilderFactory: " + factory.getClass().getName());
-
-         for (String key : domRef.getPropertyKeys())
+         for (ServiceReference sref : domRefs)
          {
-            Object value = domRef.getProperty(key);
-            log.log(LogService.LOG_DEBUG, "   " + key + "=" + value);
+            Object factory = context.getService(sref);
+            log.log(LogService.LOG_DEBUG, "DocumentBuilderFactory: " + factory.getClass().getName());
+
+            for (String key : sref.getPropertyKeys())
+            {
+               Object value = sref.getProperty(key);
+               if (key.equals(Constants.OBJECTCLASS))
+                  value = Arrays.asList((String[])value);
+               log.log(LogService.LOG_DEBUG, "   " + key + "=" + value);
+            }
          }
       }
       else
