@@ -26,6 +26,7 @@ package org.jboss.osgi.xml;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.jboss.osgi.spi.capability.Capability;
+import org.jboss.osgi.spi.capability.CompendiumCapability;
 import org.jboss.osgi.spi.testing.OSGiRuntime;
 
 /**
@@ -60,6 +61,8 @@ public class XMLParserCapability extends Capability
       super(SAXParserFactory.class.getName());
       setFilter("(" + PARSER_PROVIDER + "=" + PROVIDER_JBOSS_OSGI + ")");
 
+      addDependency(new CompendiumCapability());
+      
       addBundle("bundles/jboss-osgi-apache-xerces.jar");
    }
 }
