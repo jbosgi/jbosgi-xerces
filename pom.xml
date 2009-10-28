@@ -27,15 +27,15 @@
   <parent>
     <groupId>org.jboss.osgi</groupId>
     <artifactId>jboss-osgi-parent</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.4-SNAPSHOT</version>
   </parent>
 
   <properties>
     <version.apache.xerces>2.9.1</version.apache.xerces>
-    <version.jboss.osgi.common>1.0.1</version.jboss.osgi.common>
+    <version.jboss.osgi.common>1.0.3-SNAPSHOT</version.jboss.osgi.common>
     <version.wutka.dtdparser>1.2.1</version.wutka.dtdparser>
     <version.xml.resolver>1.2</version.xml.resolver>
-    <version.osgi>r4v42</version.osgi>
+    <version.osgi>4.2.0</version.osgi>
   </properties>
 
   <dependencies>

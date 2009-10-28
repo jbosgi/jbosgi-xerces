@@ -27,7 +27,6 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.jboss.osgi.spi.capability.Capability;
 import org.jboss.osgi.spi.capability.LogServiceCapability;
-import org.jboss.osgi.spi.testing.OSGiRuntime;
 
 /**
  * Adds the XML parser capability to the {@link OSGiRuntime} under test.
