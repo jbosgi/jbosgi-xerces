@@ -21,18 +21,18 @@
   <artifactId>jboss-osgi-apache-xerces</artifactId>
   <packaging>bundle</packaging>
 
-  <version>2.9.2-SNAPSHOT</version>
+  <version>2.9.1-SNAPSHOT</version>
 
   <!-- Parent -->
   <parent>
     <groupId>org.jboss.osgi</groupId>
     <artifactId>jboss-osgi-parent</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.4</version>
   </parent>
 
   <properties>
     <version.apache.xerces>2.9.1</version.apache.xerces>
-    <version.jboss.osgi.common>1.0.3-SNAPSHOT</version.jboss.osgi.common>
+    <version.jboss.osgi.spi>1.0.3-SNAPSHOT</version.jboss.osgi.spi>
     <version.wutka.dtdparser>1.2.1</version.wutka.dtdparser>
     <version.xml.resolver>1.2</version.xml.resolver>
     <version.osgi>4.2.0</version.osgi>
@@ -40,11 +40,10 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.jboss.osgi.bundles</groupId>
-      <artifactId>jboss-osgi-common</artifactId>
-      <version>${version.jboss.osgi.common}</version>
+      <groupId>org.jboss.osgi</groupId>
+      <artifactId>jboss-osgi-spi</artifactId>
+      <version>${version.jboss.osgi.spi}</version>
     </dependency>
-    
     <dependency>
       <groupId>apache-xerces</groupId>
       <artifactId>xml-apis</artifactId>
@@ -95,7 +94,7 @@
               org.jboss.osgi.xml.internal
             </Privat-Package>
             <Export-Package>
-              org.jboss.osgi.xml;version=${version}
+              org.jboss.osgi.xml;version=2.9.1
             </Export-Package>
             <Import-Package>
               javax.xml.datatype, 
@@ -103,11 +102,11 @@
               javax.xml.parsers, 
               javax.xml.transform*, 
               javax.xml.validation, 
+              org.slf4j, 
               org.w3c.dom*, 
               org.xml.sax*,
 
               <!-- import -->
-              org.jboss.osgi.common.log;version=1.0,
               org.jboss.osgi.spi.capability;version=1.0,
               org.osgi.framework, 
               org.osgi.service.log,

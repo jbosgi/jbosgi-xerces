@@ -26,10 +26,9 @@ package org.jboss.osgi.xml;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.jboss.osgi.spi.capability.Capability;
-import org.jboss.osgi.spi.capability.LogServiceCapability;
 
 /**
- * Adds the XML parser capability to the {@link OSGiRuntime} under test.
+ * Adds the XML parser capability.
  * 
  * It is ignored if the {@link SAXParserFactory} is already registered.
  * 
@@ -60,8 +59,6 @@ public class XMLParserCapability extends Capability
       super(SAXParserFactory.class.getName());
       setFilter("(" + PARSER_PROVIDER + "=" + PROVIDER_JBOSS_OSGI + ")");
 
-      addDependency(new LogServiceCapability());
-      
       addBundle("bundles/jboss-osgi-apache-xerces.jar");
    }
 }
