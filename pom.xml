@@ -32,6 +32,7 @@
 
   <properties>
     <version.apache.xerces>2.9.1</version.apache.xerces>
+    <version.jboss.osgi.common>1.0.4-SNAPSHOT</version.jboss.osgi.common>
     <version.jboss.osgi.spi>1.0.3-SNAPSHOT</version.jboss.osgi.spi>
     <version.wutka.dtdparser>1.2.1</version.wutka.dtdparser>
     <version.xml.resolver>1.2</version.xml.resolver>
@@ -65,6 +66,14 @@
       <version>${version.xml.resolver}</version>
     </dependency>
 
+    <!-- Provided Capability -->
+    <dependency>
+      <groupId>org.jboss.osgi.bundles</groupId>
+      <artifactId>jboss-osgi-common</artifactId>
+      <version>${version.jboss.osgi.common}</version>
+      <scope>provided</scope>
+    </dependency>
+    
     <!-- OSGi Dependencies -->    
     <dependency>
       <groupId>org.osgi</groupId>
@@ -107,6 +116,7 @@
               org.xml.sax*,
 
               <!-- import -->
+              org.jboss.osgi.common.log;version=1.0,
               org.jboss.osgi.spi.capability;version=1.0,
               org.osgi.framework, 
               org.osgi.service.log,

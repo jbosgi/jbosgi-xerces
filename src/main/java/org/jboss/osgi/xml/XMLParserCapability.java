@@ -25,6 +25,7 @@ package org.jboss.osgi.xml;
 
 import javax.xml.parsers.SAXParserFactory;
 
+import org.jboss.osgi.common.log.LoggingCapability;
 import org.jboss.osgi.spi.capability.Capability;
 
 /**
@@ -58,6 +59,8 @@ public class XMLParserCapability extends Capability
    {
       super(SAXParserFactory.class.getName());
       setFilter("(" + PARSER_PROVIDER + "=" + PROVIDER_JBOSS_OSGI + ")");
+      
+      addDependency(new LoggingCapability());
 
       addBundle("bundles/jboss-osgi-apache-xerces.jar");
    }
