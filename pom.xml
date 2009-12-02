@@ -98,7 +98,6 @@
           <instructions>
             <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
             <Bundle-Activator>org.jboss.osgi.xml.XMLParserActivatorExt</Bundle-Activator>
-            <Bundle-ActivationPolicy>lazy</Bundle-ActivationPolicy>
             <Privat-Package>
               org.jboss.osgi.xml.internal
             </Privat-Package>
