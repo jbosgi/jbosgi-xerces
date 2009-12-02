@@ -32,7 +32,7 @@
 
   <properties>
     <version.apache.xerces>2.9.1</version.apache.xerces>
-    <version.jboss.osgi.common>1.0.4-SNAPSHOT</version.jboss.osgi.common>
+    <version.jboss.osgi.common>1.0.3-SNAPSHOT</version.jboss.osgi.common>
     <version.jboss.osgi.spi>1.0.3-SNAPSHOT</version.jboss.osgi.spi>
     <version.wutka.dtdparser>1.2.1</version.wutka.dtdparser>
     <version.xml.resolver>1.2</version.xml.resolver>
