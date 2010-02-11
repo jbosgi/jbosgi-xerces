@@ -29,13 +29,12 @@ import java.util.Hashtable;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.jboss.logging.Logger;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.xml.XMLParserActivator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Activate the XML parser using {@link XMLParserActivatorExt}
@@ -46,7 +45,7 @@ import org.slf4j.LoggerFactory;
 public class XMLParserActivatorExt extends XMLParserActivator
 {
    // Provide logging
-   private static Logger log = LoggerFactory.getLogger(XMLParserActivatorExt.class);
+   private static final Logger log = Logger.getLogger(XMLParserActivatorExt.class);
 
    public void start(BundleContext context) throws Exception
    {
