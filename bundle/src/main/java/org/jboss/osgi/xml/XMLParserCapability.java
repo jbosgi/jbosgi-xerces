@@ -33,7 +33,7 @@ import org.jboss.osgi.spi.capability.Capability;
  * 
  * It is ignored if the {@link SAXParserFactory} is already registered.
  * 
- * Installed bundles: jboss-osgi-apache-xerces.jar
+ * Installed bundles: jboss-osgi-xerces.jar
  * 
  * @author thomas.diesler@jboss.com
  * @since 05-May-2009
@@ -62,6 +62,6 @@ public class XMLParserCapability extends Capability
       
       addDependency(new LoggingCapability());
 
-      addBundle("bundles/jboss-osgi-apache-xerces.jar");
+      addBundle("bundles/jboss-osgi-xerces.jar");
    }
 }
