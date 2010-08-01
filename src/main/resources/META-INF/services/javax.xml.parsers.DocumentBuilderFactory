@@ -1,1 +1,1 @@
-org.jboss.osgi.xml.DocumentBuilderFactoryImpl
+org.jboss.osgi.xml.internal.DocumentBuilderFactoryImpl

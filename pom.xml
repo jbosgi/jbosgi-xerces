@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.jboss.osgi</groupId>
     <artifactId>jboss-osgi-parent</artifactId>
-    <version>1.0.9-SNAPSHOT</version>
+    <version>1.0.8</version>
   </parent>
 
   <!-- Source Control -->
@@ -38,10 +38,15 @@
   <!-- Properties -->
   <properties>
     <version.apache.xerces>2.9.1</version.apache.xerces>
-    <version.jboss.osgi.spi>1.0.11-SNAPSHOT</version.jboss.osgi.spi>
+    <version.arquillian>1.0.0-SNAPSHOT</version.arquillian>
+    <version.jboss.logging>2.1.0.GA</version.jboss.logging>
+    <version.jboss.osgi.felix>3.0.1</version.jboss.osgi.felix>
+    <version.jboss.osgi.spi>1.0.10</version.jboss.osgi.spi>
+    <version.jboss.osgi.vfs>1.0.0</version.jboss.osgi.vfs>
     <version.wutka.dtdparser>1.2.1</version.wutka.dtdparser>
     <version.xml.resolver>1.2</version.xml.resolver>
     <version.osgi>4.2.0</version.osgi>
+    <surefire.jpda.args/>
   </properties>
 
   <!-- Dependencies -->
@@ -77,6 +82,45 @@
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.compendium</artifactId>
       <version>${version.osgi}</version>
+      <scope>provided</scope>
+    </dependency>
+    
+    <!-- Test Dependencies -->
+    <dependency>
+      <groupId>org.jboss.arquillian.container</groupId>
+      <artifactId>arquillian-osgi-embedded-4.2</artifactId>
+      <version>${version.arquillian}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.arquillian.protocol</groupId>
+      <artifactId>arquillian-protocol-jmx-osgi-bundle</artifactId>
+      <version>${version.arquillian}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.osgi.felix</groupId>
+      <artifactId>jboss-osgi-felix</artifactId>
+      <version>${version.jboss.osgi.felix}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.osgi.resolver</groupId>
+      <artifactId>jbosgi-resolver-felix</artifactId>
+      <version>${version.jboss.osgi.felix}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.osgi.vfs</groupId>
+      <artifactId>jboss-osgi-vfs30</artifactId>
+      <version>${version.jboss.osgi.vfs}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging-log4j</artifactId>
+      <version>${version.jboss.logging}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -87,13 +131,13 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
-            <Bundle-Activator>org.jboss.osgi.xml.XMLParserActivatorExt</Bundle-Activator>
+            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+            <Bundle-Activator>org.jboss.osgi.xml.internal.XMLParserActivatorExt</Bundle-Activator>
             <Privat-Package>
               org.jboss.osgi.xml.internal
             </Privat-Package>
             <Export-Package>
-              org.jboss.osgi.xml;version=${version}
+              org.jboss.osgi.xml;version=${project.version}
               javax.xml.datatype, 
               javax.xml.namespace, 
               javax.xml.parsers, 
@@ -110,7 +154,7 @@
               org.xml.sax*,
 
               <!-- import -->
-              org.jboss.logging;version="[3.0,4.0)",
+              org.jboss.logging;version="[2.0,4.0)",
               org.jboss.osgi.spi.*;version="[1.0,2.0)",
               org.osgi.framework;version="[1.5,2.0)",
               org.osgi.util.xml;version="[1.0,2.0)",
@@ -130,7 +174,100 @@
           </instructions>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>build-test-jars</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <tasks>
+                <property name="maven.runtime.classpath" refid="maven.runtime.classpath" />
+                <property name="artifactId" value="${project.artifactId}" />
+                <property name="tests.output.dir" value="${project.build.directory}" />
+                <property name="build.artifact" value="${project.build.finalName}" />
+                <ant antfile="scripts/antrun-test-jars.xml" />
+              </tasks>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>bundles</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>directory-single</goal>
+            </goals>
+            <configuration>
+              <finalName>test-libs</finalName>
+              <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
+              <appendAssemblyId>false</appendAssemblyId>
+              <descriptors>
+                <descriptor>scripts/assembly-bundles.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+        <executions>
+          <execution>
+            <id>surefire-integration-tests</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <skip>false</skip>
+              <argLine>-da ${surefire.jpda.args}</argLine>
+              <systemProperties>
+                <property>
+                  <name>java.protocol.handler.pkgs</name>
+                  <value>org.jboss.vfs.protocol</value>
+                </property>
+                <property>
+                  <name>log4j.output.dir</name>
+                  <value>${project.build.directory}</value>
+                </property>
+                <property>
+                  <name>test.archive.directory</name>
+                  <value>${project.build.directory}/test-libs</value>
+                </property>
+              </systemProperties>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
+  
+  <!-- Profiles -->
+  <profiles>
+    <!--
+      Name: jpda
+      Descr: Enable JPDA remote debuging
+    -->
+    <profile>
+      <id>jpda</id>
+      <activation>
+        <property>
+          <name>jpda</name>
+        </property>
+      </activation>
+      <properties>
+        <surefire.jpda.args>-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y</surefire.jpda.args>
+      </properties>
+    </profile>
+  </profiles>
   
 </project>
