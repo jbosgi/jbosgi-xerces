@@ -14,85 +14,123 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <name>JBossOSGi Xerces</name>
-  <description>A JBossOSGi provided Apache Xerces bundle</description>
+  <name>JBossOSGi Xerces Bundle</name>
   
   <groupId>org.jboss.osgi.xerces</groupId>
-  <artifactId>jboss-osgi-xerces-parent</artifactId>
-  <packaging>pom</packaging>
-
-  <version>2.9.1.SP6-SNAPSHOT</version>
+  <artifactId>jboss-osgi-xerces</artifactId>
+  <version>2.9.2.SP5-SNAPSHOT</version>
+  <packaging>bundle</packaging>
 
   <!-- Parent -->
   <parent>
     <groupId>org.jboss.osgi</groupId>
     <artifactId>jboss-osgi-parent</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.9-SNAPSHOT</version>
   </parent>
 
-  <!-- SCM -->
+  <!-- Source Control -->
   <scm>
-    <connection>scm:git:git://github.com/jbosgi/jbosgi-apache-xerces.git</connection>
-    <developerConnection>scm:git:git@github.com:jbosgi/jbosgi-apache-xerces.git</developerConnection>
-    <url>http://github.com/jbosgi/jbosgi-apache-xerces</url>
+    <connection>scm:git:git://github.com/jbosgi/jbosgi-xerces.git</connection>
+    <developerConnection>scm:git:git@github.com:jbosgi/jbosgi-xerces.git</developerConnection>
+    <url>http://github.com/jbosgi/jbosgi-xerces</url>
   </scm>
-
-  <!-- Modules -->  
-  <modules>
-    <module>bundle</module>
-  </modules>
   
   <!-- Properties -->
   <properties>
     <version.apache.xerces>2.9.1</version.apache.xerces>
-    <version.jboss.osgi.common>1.0.4</version.jboss.osgi.common>
-    <version.jboss.osgi.spi>1.0.7</version.jboss.osgi.spi>
+    <version.jboss.osgi.spi>1.0.11-SNAPSHOT</version.jboss.osgi.spi>
     <version.wutka.dtdparser>1.2.1</version.wutka.dtdparser>
     <version.xml.resolver>1.2</version.xml.resolver>
     <version.osgi>4.2.0</version.osgi>
   </properties>
 
-  <!-- Dependency Management -->  
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.jboss.osgi</groupId>
-        <artifactId>jboss-osgi-spi</artifactId>
-        <version>${version.jboss.osgi.spi}</version>
-      </dependency>
-      <dependency>
-        <groupId>xerces</groupId>
-        <artifactId>xercesImpl</artifactId>
-        <version>${version.apache.xerces}</version>
-      </dependency>
-      <dependency>
-        <groupId>wutka-dtdparser</groupId>
-        <artifactId>dtdparser121</artifactId>
-        <version>${version.wutka.dtdparser}</version>
-      </dependency>
-      <dependency>
-        <groupId>xml-resolver</groupId>
-        <artifactId>xml-resolver</artifactId>
-        <version>${version.xml.resolver}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.osgi.bundles</groupId>
-        <artifactId>jboss-osgi-common</artifactId>
-        <version>${version.jboss.osgi.common}</version>
-      </dependency>
-      
-      <!-- OSGi Dependencies -->    
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.core</artifactId>
-        <version>${version.osgi}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.compendium</artifactId>
-        <version>${version.osgi}</version>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+  <!-- Dependencies -->
+  <dependencies>
+    <dependency>
+      <groupId>org.jboss.osgi</groupId>
+      <artifactId>jboss-osgi-spi</artifactId>
+      <version>${version.jboss.osgi.spi}</version>
+    </dependency>
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <version>${version.apache.xerces}</version>
+    </dependency>
+    <dependency>
+      <groupId>wutka-dtdparser</groupId>
+      <artifactId>dtdparser121</artifactId>
+      <version>${version.wutka.dtdparser}</version>
+    </dependency>
+    <dependency>
+      <groupId>xml-resolver</groupId>
+      <artifactId>xml-resolver</artifactId>
+      <version>${version.xml.resolver}</version>
+    </dependency>
 
+    <!-- OSGi Dependencies -->    
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.core</artifactId>
+      <version>${version.osgi}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.compendium</artifactId>
+      <version>${version.osgi}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Bundle-SymbolicName>${artifactId}</Bundle-SymbolicName>
+            <Bundle-Activator>org.jboss.osgi.xml.XMLParserActivatorExt</Bundle-Activator>
+            <Privat-Package>
+              org.jboss.osgi.xml.internal
+            </Privat-Package>
+            <Export-Package>
+              org.jboss.osgi.xml;version=${version}
+              javax.xml.datatype, 
+              javax.xml.namespace, 
+              javax.xml.parsers, 
+              javax.xml.transform*, 
+              javax.xml.validation, 
+            </Export-Package>
+            <Import-Package>
+              javax.xml.datatype, 
+              javax.xml.namespace, 
+              javax.xml.parsers, 
+              javax.xml.transform*, 
+              javax.xml.validation, 
+              org.w3c.dom*, 
+              org.xml.sax*,
+
+              <!-- import -->
+              org.jboss.logging;version="[3.0,4.0)",
+              org.jboss.osgi.spi.*;version="[1.0,2.0)",
+              org.osgi.framework;version="[1.5,2.0)",
+              org.osgi.util.xml;version="[1.0,2.0)",
+              
+              <!-- ignore -->
+              !sun.io, 
+            </Import-Package>
+            <Embed-Dependency>
+              dtdparser121;inline=false,
+              xercesImpl;inline=false,
+              xml-resolver;inline=false,
+            </Embed-Dependency>
+            <!-- _exportcontents>
+              com.wutka.dtd;version=${version.wutka.dtdparser},
+              org.apache.xerces.*;version=${version.apache.xerces},
+            </_exportcontents -->
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  
 </project>
