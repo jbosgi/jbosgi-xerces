@@ -25,14 +25,15 @@ package org.jboss.test.osgi.xml.dom;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
 import javax.inject.Inject;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.jboss.arquillian.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -41,11 +42,15 @@ import org.jboss.osgi.xml.XMLParserCapability;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -62,7 +67,9 @@ import org.w3c.dom.Node;
 public class DOMParserTestCase
 {
    @Inject
-   public BundleContext context;
+   public static BundleContext context;
+   
+   private static Bundle xercesBundle;
    
    @Deployment
    public static JavaArchive createdeployment()
@@ -77,22 +84,66 @@ public class DOMParserTestCase
             OSGiManifestBuilder builder = OSGiManifestBuilder.newInstance();
             builder.addBundleSymbolicName(archive.getName());
             builder.addBundleManifestVersion(2);
-            // [TODO] generate a separate bundle the contains the test case
             builder.addExportPackages(DOMParserTestCase.class);
             builder.addImportPackages("org.jboss.arquillian.junit");
             builder.addImportPackages("org.jboss.shrinkwrap.api", "org.jboss.shrinkwrap.api.asset", "org.jboss.shrinkwrap.api.spec");
             builder.addImportPackages("javax.inject", "org.junit", "org.junit.runner");
-            builder.addImportPackages("org.osgi.framework", "javax.xml.parsers", "org.w3c.dom");
+            builder.addImportPackages("org.osgi.framework", "org.osgi.util.tracker");
+            builder.addImportPackages("javax.xml.parsers", "org.w3c.dom");
             return builder.openStream();
          }
       });
       return archive;
    }
+
+   /*
+   @BeforeClass
+   public static void beforeClass()
+   {
+      if (context != null)
+      {
+         try
+         {
+            File xercesFile = new File("target/test-libs/bundles/jboss-osgi-xerces.jar");
+            xercesBundle = context.installBundle(xercesFile.toURI().toString());
+            xercesBundle.start();
+         }
+         catch (BundleException ex)
+         {
+            fail(ex.toString());
+         }
+      }
+   }
+   
+   @AfterClass
+   public static void afterClass()
+   {
+      if (xercesBundle != null)
+      {
+         try
+         {
+            xercesBundle.uninstall();
+         }
+         catch (BundleException ex)
+         {
+            fail(ex.toString());
+         }
+      }
+   }
+   */
    
    @Test
    public void testDOMParser() throws Exception
    {
-      DocumentBuilder domBuilder = getDocumentBuilder();
+      String filter = "(" + XMLParserCapability.PARSER_PROVIDER + "=" + XMLParserCapability.PROVIDER_JBOSS_OSGI + ")";
+      ServiceReference[] srefs = context.getServiceReferences(DocumentBuilderFactory.class.getName(), filter);
+      if (srefs == null)
+         throw new IllegalStateException("DocumentBuilderFactory not available");
+      
+      DocumentBuilderFactory factory = (DocumentBuilderFactory)context.getService(srefs[0]);
+      factory.setValidating(false);
+      
+      DocumentBuilder domBuilder = factory.newDocumentBuilder();
       URL resURL = context.getBundle().getResource("simple/simple.xml");
       Document dom = domBuilder.parse(resURL.openStream());
       assertNotNull("Document not null", dom);
@@ -105,18 +156,43 @@ public class DOMParserTestCase
       assertEquals("content", child.getTextContent());
    }
 
-   private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException, InvalidSyntaxException
+   @Test
+   public void testDOMParserTracker() throws Exception
    {
-      // This service gets registerd by the jboss-osgi-apache-xerces service
-      String filter = "(" + XMLParserCapability.PARSER_PROVIDER + "=" + XMLParserCapability.PROVIDER_JBOSS_OSGI + ")";
-      ServiceReference[] srefs = context.getServiceReferences(DocumentBuilderFactory.class.getName(), filter);
-      if (srefs == null)
-         throw new IllegalStateException("DocumentBuilderFactory not available");
-      
-      DocumentBuilderFactory factory = (DocumentBuilderFactory)context.getService(srefs[0]);
-      factory.setValidating(false);
-      
-      DocumentBuilder domBuilder = factory.newDocumentBuilder();
-      return domBuilder;
+      final StringBuffer messages = new StringBuffer();
+      ServiceTracker tracker = new ServiceTracker(context, DocumentBuilderFactory.class.getName(), null)
+      {
+         @Override
+         public Object addingService(ServiceReference reference)
+         {
+            DocumentBuilderFactory factory = (DocumentBuilderFactory)super.addingService(reference);
+            try
+            {
+               factory.setValidating(false);
+               
+               DocumentBuilder domBuilder = factory.newDocumentBuilder();
+               URL resURL = context.getBundle().getResource("simple/simple.xml");
+               Document dom = domBuilder.parse(resURL.openStream());
+               assertNotNull("Document not null", dom);
+               
+               Element root = dom.getDocumentElement();
+               assertEquals("root", root.getLocalName());
+               
+               Node child = root.getFirstChild();
+               assertEquals("child", child.getLocalName());
+               assertEquals("content", child.getTextContent());
+               
+               messages.append("pass");
+            }
+            catch (Exception ex)
+            {
+               messages.append(ex.toString());
+            }
+            return factory;
+         }
+      };
+      tracker.open();
+
+      assertEquals("pass", messages.toString());
    }
 }

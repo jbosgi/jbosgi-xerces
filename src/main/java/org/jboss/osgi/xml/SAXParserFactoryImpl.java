@@ -19,29 +19,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.osgi.xml.internal;
+package org.jboss.osgi.xml;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
 
 //$Id: XercesParserActivator.java 91417 2009-07-20 09:25:44Z thomas.diesler@jboss.com $
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.ParserConfigurationException;
-
 /**
- * A DocumentBuilderFactory that gets loaded from this bundle.
+ * A SAXParserFactory that gets loaded from this bundle.
  * 
  * @author thomas.diesler@jboss.com
  * @since 21-Jul-2009
  */
-public class DocumentBuilderFactoryImpl extends org.apache.xerces.jaxp.DocumentBuilderFactoryImpl
+public class SAXParserFactoryImpl extends org.apache.xerces.jaxp.SAXParserFactoryImpl
 {
    @Override
-   public DocumentBuilder newDocumentBuilder() throws ParserConfigurationException
+   public SAXParser newSAXParser() throws ParserConfigurationException
    {
       ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
       try
       {
          Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-         return super.newDocumentBuilder();
+         return super.newSAXParser();
       }
       finally
       {

@@ -29,7 +29,6 @@ import java.io.InputStream;
 import java.net.URL;
 
 import javax.inject.Inject;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -43,8 +42,8 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.osgi.util.tracker.ServiceTracker;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -75,12 +74,12 @@ public class SAXParserTestCase
             OSGiManifestBuilder builder = OSGiManifestBuilder.newInstance();
             builder.addBundleSymbolicName(archive.getName());
             builder.addBundleManifestVersion(2);
-            // [TODO] generate a separate bundle the contains the test case
             builder.addExportPackages(SAXParserTestCase.class);
             builder.addImportPackages("org.jboss.arquillian.junit");
             builder.addImportPackages("org.jboss.shrinkwrap.api", "org.jboss.shrinkwrap.api.asset", "org.jboss.shrinkwrap.api.spec");
             builder.addImportPackages("javax.inject", "org.junit", "org.junit.runner");
-            builder.addImportPackages("org.osgi.framework", "javax.xml.parsers", "org.xml.sax", "org.xml.sax.helpers");
+            builder.addImportPackages("org.osgi.framework", "org.osgi.util.tracker");
+            builder.addImportPackages("javax.xml.parsers", "org.xml.sax", "org.xml.sax.helpers");
             return builder.openStream();
          }
       });
@@ -90,17 +89,6 @@ public class SAXParserTestCase
    @Test
    public void testSAXParser() throws Exception
    {
-      SAXParser saxParser = getSAXParser();
-      URL resURL = context.getBundle().getResource("simple/simple.xml");
-      
-      SAXHandler saxHandler = new SAXHandler();
-      saxParser.parse(resURL.openStream(), saxHandler);
-      assertEquals("content", saxHandler.getContent());
-   }
-
-   private SAXParser getSAXParser() throws SAXException, ParserConfigurationException, InvalidSyntaxException
-   {
-      // This service gets registerd by the jboss-osgi-apache-xerces service
       String filter = "(" + XMLParserCapability.PARSER_PROVIDER + "=" + XMLParserCapability.PROVIDER_JBOSS_OSGI + ")";
       ServiceReference[] srefs = context.getServiceReferences(SAXParserFactory.class.getName(), filter);
       if (srefs == null)
@@ -110,7 +98,46 @@ public class SAXParserTestCase
       factory.setValidating(false);
       
       SAXParser saxParser = factory.newSAXParser();
-      return saxParser;
+      URL resURL = context.getBundle().getResource("simple/simple.xml");
+      
+      SAXHandler saxHandler = new SAXHandler();
+      saxParser.parse(resURL.openStream(), saxHandler);
+      assertEquals("content", saxHandler.getContent());
+   }
+
+   @Test
+   public void testDOMParserTracker() throws Exception
+   {
+      final StringBuffer messages = new StringBuffer();
+      ServiceTracker tracker = new ServiceTracker(context, SAXParserFactory.class.getName(), null)
+      {
+         @Override
+         public Object addingService(ServiceReference reference)
+         {
+            SAXParserFactory factory = (SAXParserFactory)super.addingService(reference);
+            try
+            {
+               factory.setValidating(false);
+               
+               SAXParser saxParser = factory.newSAXParser();
+               URL resURL = context.getBundle().getResource("simple/simple.xml");
+               
+               SAXHandler saxHandler = new SAXHandler();
+               saxParser.parse(resURL.openStream(), saxHandler);
+               assertEquals("content", saxHandler.getContent());
+               
+               messages.append("pass");
+            }
+            catch (Exception ex)
+            {
+               messages.append(ex.toString());
+            }
+            return factory;
+         }
+      };
+      tracker.open();
+
+      assertEquals("pass", messages.toString());
    }
    
    static class SAXHandler extends DefaultHandler

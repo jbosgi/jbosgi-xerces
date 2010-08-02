@@ -47,7 +47,7 @@ public class XMLParserCapability extends Capability
     * Service property value for the 'provider' of this service. 
     * The value is <code>jboss.osgi</code>.
     */
-   public static final String PROVIDER_JBOSS_OSGI = "jboss.osgi";
+   public static final String PROVIDER_JBOSS_OSGI = "jboss";
    /*
     * Service property specifying if factory is configured to support XInclude aware parsers. 
     * The value is of type <code>Boolean</code>.

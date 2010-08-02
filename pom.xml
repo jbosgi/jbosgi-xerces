@@ -138,11 +138,6 @@
             </Privat-Package>
             <Export-Package>
               org.jboss.osgi.xml;version=${project.version}
-              javax.xml.datatype, 
-              javax.xml.namespace, 
-              javax.xml.parsers, 
-              javax.xml.transform*, 
-              javax.xml.validation, 
             </Export-Package>
             <Import-Package>
               javax.xml.datatype, 

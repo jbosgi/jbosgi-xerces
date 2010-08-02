@@ -26,6 +26,7 @@ package org.jboss.osgi.xml.internal;
 import java.util.Arrays;
 import java.util.Hashtable;
 
+import javax.xml.datatype.DatatypeFactory;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -52,6 +53,10 @@ public class XMLParserActivatorExt extends XMLParserActivator
    {
       super.start(context);
 
+      // This causes bnd to include the javax.xml.datatype package, 
+      // which is not referenced otherwise, in this bundle
+      DatatypeFactory.newInstance();
+      
       logSAXParserFactory(context);
       logDOMParserFactory(context);
    }
