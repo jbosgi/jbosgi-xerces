@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.jboss.osgi</groupId>
     <artifactId>jboss-osgi-parent</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.9-SNAPSHOT</version>
   </parent>
 
   <!-- Source Control -->
@@ -39,14 +39,12 @@
   <properties>
     <version.apache.xerces>2.9.1</version.apache.xerces>
     <version.arquillian>1.0.0-SNAPSHOT</version.arquillian>
-    <version.jboss.logging>2.1.0.GA</version.jboss.logging>
     <version.jboss.osgi.felix>3.0.1</version.jboss.osgi.felix>
-    <version.jboss.osgi.spi>1.0.10</version.jboss.osgi.spi>
+    <version.jboss.osgi.spi>1.0.11-SNAPSHOT</version.jboss.osgi.spi>
     <version.jboss.osgi.vfs>1.0.0</version.jboss.osgi.vfs>
     <version.wutka.dtdparser>1.2.1</version.wutka.dtdparser>
     <version.xml.resolver>1.2</version.xml.resolver>
     <version.osgi>4.2.0</version.osgi>
-    <surefire.jpda.args/>
   </properties>
 
   <!-- Modules -->
@@ -112,11 +110,6 @@
         <groupId>org.jboss.osgi.vfs</groupId>
         <artifactId>jboss-osgi-vfs30</artifactId>
         <version>${version.jboss.osgi.vfs}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.logging</groupId>
-        <artifactId>jboss-logging-log4j</artifactId>
-        <version>${version.jboss.logging}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

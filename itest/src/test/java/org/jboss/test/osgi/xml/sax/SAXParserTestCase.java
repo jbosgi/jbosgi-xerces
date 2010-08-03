@@ -39,8 +39,10 @@ import org.jboss.osgi.xml.XMLParserCapability;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.test.osgi.xml.XMLParserTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
@@ -56,16 +58,19 @@ import org.xml.sax.helpers.DefaultHandler;
  * @since 21-Jul-2009
  */
 @RunWith(Arquillian.class)
-public class SAXParserTestCase
+public class SAXParserTestCase extends XMLParserTestCase
 {
    @Inject
    public BundleContext context;
 
+   // [ARQ-234] Define calls to @BeforeClass, @Before, @AfterClass, @After
+   static Bundle xercesBundle;
+   
    @Deployment
    public static JavaArchive createdeployment()
    {
       final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "sax-parser.jar");
-      archive.addClasses(SAXParserTestCase.class);
+      archive.addClasses(SAXParserTestCase.class, XMLParserTestCase.class);
       archive.addResource("simple/simple.xml");
       archive.setManifest(new Asset()
       {
@@ -89,6 +94,12 @@ public class SAXParserTestCase
    @Test
    public void testSAXParser() throws Exception
    {
+      if (xercesBundle == null)
+      {
+         xercesBundle = installXercesBundle(context);
+         xercesBundle.start();
+      }
+      
       String filter = "(" + XMLParserCapability.PARSER_PROVIDER + "=" + XMLParserCapability.PROVIDER_JBOSS_OSGI + ")";
       ServiceReference[] srefs = context.getServiceReferences(SAXParserFactory.class.getName(), filter);
       if (srefs == null)
@@ -108,6 +119,12 @@ public class SAXParserTestCase
    @Test
    public void testDOMParserTracker() throws Exception
    {
+      if (xercesBundle == null)
+      {
+         xercesBundle = installXercesBundle(context);
+         xercesBundle.start();
+      }
+      
       final StringBuffer messages = new StringBuffer();
       ServiceTracker tracker = new ServiceTracker(context, SAXParserFactory.class.getName(), null)
       {

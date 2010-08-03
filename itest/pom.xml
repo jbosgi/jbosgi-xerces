@@ -38,6 +38,20 @@
       <groupId>org.jboss.osgi.xerces</groupId>
       <artifactId>jboss-osgi-xerces</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>xerces</groupId>
+          <artifactId>xercesImpl</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>wutka-dtdparser</groupId>
+          <artifactId>dtdparser121</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xml-resolver</groupId>
+          <artifactId>xml-resolver</artifactId>
+        </exclusion>
+      </exclusions>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -78,9 +92,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.jboss.logging</groupId>
-      <artifactId>jboss-logging-log4j</artifactId>
-      <version>${version.jboss.logging}</version>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

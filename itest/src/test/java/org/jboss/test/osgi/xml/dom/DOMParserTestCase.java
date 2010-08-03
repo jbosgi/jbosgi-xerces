@@ -25,9 +25,7 @@ package org.jboss.test.osgi.xml.dom;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
-import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -42,13 +40,11 @@ import org.jboss.osgi.xml.XMLParserCapability;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.jboss.test.osgi.xml.XMLParserTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.w3c.dom.Document;
@@ -64,18 +60,21 @@ import org.w3c.dom.Node;
  * @since 21-Jul-2009
  */
 @RunWith(Arquillian.class)
-public class DOMParserTestCase
+public class DOMParserTestCase extends XMLParserTestCase
 {
    @Inject
    public static BundleContext context;
+   @Inject
+   public Bundle bundle;
    
-   private static Bundle xercesBundle;
+   // [ARQ-234] Define calls to @BeforeClass, @Before, @AfterClass, @After
+   static Bundle xercesBundle;
    
    @Deployment
    public static JavaArchive createdeployment()
    {
       final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "dom-parser.jar");
-      archive.addClasses(DOMParserTestCase.class);
+      archive.addClasses(DOMParserTestCase.class, XMLParserTestCase.class);
       archive.addResource("simple/simple.xml");
       archive.setManifest(new Asset()
       {
@@ -95,46 +94,16 @@ public class DOMParserTestCase
       });
       return archive;
    }
-
-   /*
-   @BeforeClass
-   public static void beforeClass()
-   {
-      if (context != null)
-      {
-         try
-         {
-            File xercesFile = new File("target/test-libs/bundles/jboss-osgi-xerces.jar");
-            xercesBundle = context.installBundle(xercesFile.toURI().toString());
-            xercesBundle.start();
-         }
-         catch (BundleException ex)
-         {
-            fail(ex.toString());
-         }
-      }
-   }
-   
-   @AfterClass
-   public static void afterClass()
-   {
-      if (xercesBundle != null)
-      {
-         try
-         {
-            xercesBundle.uninstall();
-         }
-         catch (BundleException ex)
-         {
-            fail(ex.toString());
-         }
-      }
-   }
-   */
    
    @Test
    public void testDOMParser() throws Exception
    {
+      if (xercesBundle == null)
+      {
+         xercesBundle = installXercesBundle(context);
+         xercesBundle.start();
+      }
+      
       String filter = "(" + XMLParserCapability.PARSER_PROVIDER + "=" + XMLParserCapability.PROVIDER_JBOSS_OSGI + ")";
       ServiceReference[] srefs = context.getServiceReferences(DocumentBuilderFactory.class.getName(), filter);
       if (srefs == null)
@@ -159,6 +128,12 @@ public class DOMParserTestCase
    @Test
    public void testDOMParserTracker() throws Exception
    {
+      if (xercesBundle == null)
+      {
+         xercesBundle = installXercesBundle(context);
+         xercesBundle.start();
+      }
+      
       final StringBuffer messages = new StringBuffer();
       ServiceTracker tracker = new ServiceTracker(context, DocumentBuilderFactory.class.getName(), null)
       {

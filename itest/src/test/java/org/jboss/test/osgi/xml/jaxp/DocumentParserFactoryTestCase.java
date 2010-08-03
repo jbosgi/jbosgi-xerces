@@ -40,6 +40,7 @@ import org.jboss.osgi.xml.DocumentBuilderFactoryImpl;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.test.osgi.xml.XMLParserTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.osgi.framework.Bundle;
@@ -61,7 +62,7 @@ import org.w3c.dom.Node;
  * @since 21-Jul-2009
  */
 @RunWith(Arquillian.class)
-public class DocumentParserFactoryTestCase
+public class DocumentParserFactoryTestCase extends XMLParserTestCase
 {
    static String serviceId = "META-INF/services/" + DocumentBuilderFactory.class.getName();
    
@@ -69,12 +70,14 @@ public class DocumentParserFactoryTestCase
    public BundleContext context;
    @Inject
    public Bundle bundle;
+   // [ARQ-234] Define calls to @BeforeClass, @Before, @AfterClass, @After
+   static Bundle xercesBundle;
    
    @Deployment
    public static JavaArchive createdeployment()
    {
       final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "dom-factory.jar");
-      archive.addClasses(DocumentParserFactoryTestCase.class);
+      archive.addClasses(DocumentParserFactoryTestCase.class, XMLParserTestCase.class);
       archive.addResource("simple/simple.xml");
       archive.setManifest(new Asset()
       {
@@ -102,6 +105,12 @@ public class DocumentParserFactoryTestCase
    @Test
    public void testDOMParser() throws Exception
    {
+      if (xercesBundle == null)
+      {
+         xercesBundle = installXercesBundle(context);
+         xercesBundle.start();
+      }
+      
       URL resourceURL = bundle.getResource(serviceId);
       assertNotNull("Resource URL not null", resourceURL);
       
