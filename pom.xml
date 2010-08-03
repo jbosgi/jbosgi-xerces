@@ -14,12 +14,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <name>JBossOSGi Xerces Bundle</name>
+  <name>JBossOSGi Xerces</name>
   
   <groupId>org.jboss.osgi.xerces</groupId>
-  <artifactId>jboss-osgi-xerces</artifactId>
+  <artifactId>jboss-osgi-xerces-parent</artifactId>
   <version>2.9.2.SP5-SNAPSHOT</version>
-  <packaging>bundle</packaging>
+  <packaging>pom</packaging>
 
   <!-- Parent -->
   <parent>
@@ -49,220 +49,76 @@
     <surefire.jpda.args/>
   </properties>
 
-  <!-- Dependencies -->
-  <dependencies>
-    <dependency>
-      <groupId>org.jboss.osgi</groupId>
-      <artifactId>jboss-osgi-spi</artifactId>
-      <version>${version.jboss.osgi.spi}</version>
-    </dependency>
-    <dependency>
-      <groupId>xerces</groupId>
-      <artifactId>xercesImpl</artifactId>
-      <version>${version.apache.xerces}</version>
-    </dependency>
-    <dependency>
-      <groupId>wutka-dtdparser</groupId>
-      <artifactId>dtdparser121</artifactId>
-      <version>${version.wutka.dtdparser}</version>
-    </dependency>
-    <dependency>
-      <groupId>xml-resolver</groupId>
-      <artifactId>xml-resolver</artifactId>
-      <version>${version.xml.resolver}</version>
-    </dependency>
-
-    <!-- OSGi Dependencies -->    
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.core</artifactId>
-      <version>${version.osgi}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.compendium</artifactId>
-      <version>${version.osgi}</version>
-      <scope>provided</scope>
-    </dependency>
+  <!-- Modules -->
+  <modules>
+    <module>bundle</module>
+    <module>itest</module>
+  </modules>
     
-    <!-- Test Dependencies -->
-    <dependency>
-      <groupId>org.jboss.arquillian.container</groupId>
-      <artifactId>arquillian-osgi-embedded-4.2</artifactId>
-      <version>${version.arquillian}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.arquillian.protocol</groupId>
-      <artifactId>arquillian-protocol-jmx-osgi-bundle</artifactId>
-      <version>${version.arquillian}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.osgi.felix</groupId>
-      <artifactId>jboss-osgi-felix</artifactId>
-      <version>${version.jboss.osgi.felix}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.osgi.resolver</groupId>
-      <artifactId>jbosgi-resolver-felix</artifactId>
-      <version>${version.jboss.osgi.felix}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.osgi.vfs</groupId>
-      <artifactId>jboss-osgi-vfs30</artifactId>
-      <version>${version.jboss.osgi.vfs}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.logging</groupId>
-      <artifactId>jboss-logging-log4j</artifactId>
-      <version>${version.jboss.logging}</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+  <!-- Dependencies Management -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.jboss.osgi</groupId>
+        <artifactId>jboss-osgi-spi</artifactId>
+        <version>${version.jboss.osgi.spi}</version>
+      </dependency>
+      <dependency>
+        <groupId>xerces</groupId>
+        <artifactId>xercesImpl</artifactId>
+        <version>${version.apache.xerces}</version>
+      </dependency>
+      <dependency>
+        <groupId>wutka-dtdparser</groupId>
+        <artifactId>dtdparser121</artifactId>
+        <version>${version.wutka.dtdparser}</version>
+      </dependency>
+      <dependency>
+        <groupId>xml-resolver</groupId>
+        <artifactId>xml-resolver</artifactId>
+        <version>${version.xml.resolver}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.core</artifactId>
+        <version>${version.osgi}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.compendium</artifactId>
+        <version>${version.osgi}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.arquillian.container</groupId>
+        <artifactId>arquillian-osgi-embedded-4.2</artifactId>
+        <version>${version.arquillian}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.arquillian.protocol</groupId>
+        <artifactId>arquillian-protocol-jmx-osgi-bundle</artifactId>
+        <version>${version.arquillian}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.osgi.felix</groupId>
+        <artifactId>jboss-osgi-felix</artifactId>
+        <version>${version.jboss.osgi.felix}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.osgi.resolver</groupId>
+        <artifactId>jbosgi-resolver-felix</artifactId>
+        <version>${version.jboss.osgi.felix}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.osgi.vfs</groupId>
+        <artifactId>jboss-osgi-vfs30</artifactId>
+        <version>${version.jboss.osgi.vfs}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging-log4j</artifactId>
+        <version>${version.jboss.logging}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <configuration>
-          <instructions>
-            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-            <Bundle-Activator>org.jboss.osgi.xml.internal.XMLParserActivatorExt</Bundle-Activator>
-            <Privat-Package>
-              org.jboss.osgi.xml.internal
-            </Privat-Package>
-            <Export-Package>
-              org.jboss.osgi.xml;version=${project.version}
-            </Export-Package>
-            <Import-Package>
-              javax.xml.datatype, 
-              javax.xml.namespace, 
-              javax.xml.parsers, 
-              javax.xml.transform*, 
-              javax.xml.validation, 
-              org.w3c.dom*, 
-              org.xml.sax*,
-
-              <!-- import -->
-              org.jboss.logging;version="[2.0,4.0)",
-              org.jboss.osgi.spi.*;version="[1.0,2.0)",
-              org.osgi.framework;version="[1.5,2.0)",
-              org.osgi.util.xml;version="[1.0,2.0)",
-              
-              <!-- ignore -->
-              !sun.io, 
-            </Import-Package>
-            <Embed-Dependency>
-              dtdparser121;inline=false,
-              xercesImpl;inline=false,
-              xml-resolver;inline=false,
-            </Embed-Dependency>
-            <!-- _exportcontents>
-              com.wutka.dtd;version=${version.wutka.dtdparser},
-              org.apache.xerces.*;version=${version.apache.xerces},
-            </_exportcontents -->
-          </instructions>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>build-test-jars</id>
-            <phase>integration-test</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <tasks>
-                <property name="maven.runtime.classpath" refid="maven.runtime.classpath" />
-                <property name="artifactId" value="${project.artifactId}" />
-                <property name="tests.output.dir" value="${project.build.directory}" />
-                <property name="build.artifact" value="${project.build.finalName}" />
-                <ant antfile="scripts/antrun-test-jars.xml" />
-              </tasks>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>bundles</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>directory-single</goal>
-            </goals>
-            <configuration>
-              <finalName>test-libs</finalName>
-              <ignoreDirFormatExtensions>true</ignoreDirFormatExtensions>
-              <appendAssemblyId>false</appendAssemblyId>
-              <descriptors>
-                <descriptor>scripts/assembly-bundles.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-        <executions>
-          <execution>
-            <id>surefire-integration-tests</id>
-            <phase>integration-test</phase>
-            <goals>
-              <goal>test</goal>
-            </goals>
-            <configuration>
-              <skip>false</skip>
-              <argLine>-da ${surefire.jpda.args}</argLine>
-              <systemProperties>
-                <property>
-                  <name>java.protocol.handler.pkgs</name>
-                  <value>org.jboss.vfs.protocol</value>
-                </property>
-                <property>
-                  <name>log4j.output.dir</name>
-                  <value>${project.build.directory}</value>
-                </property>
-                <property>
-                  <name>test.archive.directory</name>
-                  <value>${project.build.directory}/test-libs</value>
-                </property>
-              </systemProperties>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
-  
-  <!-- Profiles -->
-  <profiles>
-    <!--
-      Name: jpda
-      Descr: Enable JPDA remote debuging
-    -->
-    <profile>
-      <id>jpda</id>
-      <activation>
-        <property>
-          <name>jpda</name>
-        </property>
-      </activation>
-      <properties>
-        <surefire.jpda.args>-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y</surefire.jpda.args>
-      </properties>
-    </profile>
-  </profiles>
-  
 </project>
