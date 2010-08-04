@@ -96,10 +96,10 @@
               xercesImpl;inline=false,
               xml-resolver;inline=false,
             </Embed-Dependency>
-            <!-- _exportcontents>
+            <_exportcontents>
               com.wutka.dtd;version=${version.wutka.dtdparser},
               org.apache.xerces.*;version=${version.apache.xerces},
-            </_exportcontents -->
+            </_exportcontents>
           </instructions>
         </configuration>
       </plugin>
