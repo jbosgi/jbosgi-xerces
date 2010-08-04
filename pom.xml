@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.jboss.osgi</groupId>
     <artifactId>jboss-osgi-parent</artifactId>
-    <version>1.0.9-SNAPSHOT</version>
+    <version>1.0.9</version>
   </parent>
 
   <!-- Source Control -->
@@ -38,9 +38,9 @@
   <!-- Properties -->
   <properties>
     <version.apache.xerces>2.9.1</version.apache.xerces>
-    <version.arquillian>1.0.0-SNAPSHOT</version.arquillian>
+    <version.arquillian>1.0.0.Alpha3</version.arquillian>
     <version.jboss.osgi.felix>3.0.1</version.jboss.osgi.felix>
-    <version.jboss.osgi.spi>1.0.11-SNAPSHOT</version.jboss.osgi.spi>
+    <version.jboss.osgi.spi>1.0.11</version.jboss.osgi.spi>
     <version.jboss.osgi.vfs>1.0.0</version.jboss.osgi.vfs>
     <version.wutka.dtdparser>1.2.1</version.wutka.dtdparser>
     <version.xml.resolver>1.2</version.xml.resolver>
