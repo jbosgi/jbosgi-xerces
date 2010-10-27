@@ -21,8 +21,6 @@
  */
 package org.jboss.osgi.xml.internal;
 
-//$Id$
-
 import java.util.Arrays;
 import java.util.Hashtable;
 
@@ -39,7 +37,7 @@ import org.osgi.util.xml.XMLParserActivator;
 
 /**
  * Activate the XML parser using {@link XMLParserActivatorExt}
- * 
+ *
  * @author thomas.diesler@jboss.com
  * @since 29-Apr-2009
  */
@@ -81,7 +79,7 @@ public class XMLParserActivatorExt extends XMLParserActivator
 
       // set the factory values
       factory.setXIncludeAware(xinclude);
-      
+
       // set the OSGi service properties
       props.put(XMLParserCapability.PARSER_XINCLUDEAWARE, new Boolean(xinclude));
       props.put(XMLParserCapability.PARSER_PROVIDER, XMLParserCapability.PROVIDER_JBOSS_OSGI);
@@ -96,7 +94,7 @@ public class XMLParserActivatorExt extends XMLParserActivator
       boolean xinclude = true;
       Boolean validating = (Boolean)props.get(PARSER_VALIDATING);
       Boolean namespaceaware = (Boolean)props.get(PARSER_NAMESPACEAWARE);
-      
+
       // check if this parser can be configured to be xinclude aware
       factory.setValidating(validating);
       factory.setNamespaceAware(namespaceaware);

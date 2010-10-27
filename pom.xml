@@ -9,8 +9,6 @@
   <!--                                                                        -->
   <!-- ====================================================================== -->
 
-  <!-- $Id$ -->
-  
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
@@ -38,11 +36,12 @@
   <!-- Properties -->
   <properties>
     <version.apache.xerces>2.9.1</version.apache.xerces>
-    <version.arquillian>1.0.0.Alpha3</version.arquillian>
-    <version.jboss.osgi.felix>3.0.1</version.jboss.osgi.felix>
-    <version.jboss.osgi.spi>1.0.11</version.jboss.osgi.spi>
-    <version.jboss.osgi.vfs>1.0.0</version.jboss.osgi.vfs>
-    <version.wutka.dtdparser>1.2.1</version.wutka.dtdparser>
+    <version.arquillian>1.0.0.Alpha4.SP3-SNAPSHOT</version.arquillian>
+    <version.jboss.osgi.framework>1.0.0.Alpha12-SNAPSHOT</version.jboss.osgi.framework>
+    <version.jboss.osgi.resolver>1.0.3</version.jboss.osgi.resolver>
+    <version.jboss.osgi.spi>1.0.17-SNAPSHOT</version.jboss.osgi.spi>
+    <version.jboss.osgi.vfs>1.0.4-SNAPSHOT</version.jboss.osgi.vfs>
+    <!-- version.wutka.dtdparser>1.2.1</version.wutka.dtdparser -->
     <version.xml.resolver>1.2</version.xml.resolver>
     <version.osgi>4.2.0</version.osgi>
   </properties>
@@ -58,12 +57,12 @@
     <dependencies>
       <dependency>
         <groupId>org.jboss.arquillian.container</groupId>
-        <artifactId>arquillian-osgi-embedded-4.2</artifactId>
+        <artifactId>arquillian-osgi-embedded</artifactId>
         <version>${version.arquillian}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.arquillian.protocol</groupId>
-        <artifactId>arquillian-protocol-jmx-osgi-bundle</artifactId>
+        <artifactId>arquillian-osgi-bundle</artifactId>
         <version>${version.arquillian}</version>
       </dependency>
       <dependency>
@@ -77,9 +76,14 @@
         <version>${version.jboss.osgi.felix}</version>
       </dependency>
       <dependency>
+        <groupId>org.jboss.osgi.framework</groupId>
+        <artifactId>jbosgi-framework-core</artifactId>
+        <version>${version.jboss.osgi.framework}</version>
+      </dependency>
+      <dependency>
         <groupId>org.jboss.osgi.resolver</groupId>
         <artifactId>jbosgi-resolver-felix</artifactId>
-        <version>${version.jboss.osgi.felix}</version>
+        <version>${version.jboss.osgi.resolver}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.osgi.vfs</groupId>
@@ -96,11 +100,13 @@
         <artifactId>org.osgi.compendium</artifactId>
         <version>${version.osgi}</version>
       </dependency>
+      <!-- 
       <dependency>
         <groupId>wutka-dtdparser</groupId>
         <artifactId>dtdparser121</artifactId>
         <version>${version.wutka.dtdparser}</version>
       </dependency>
+      -->
       <dependency>
         <groupId>xerces</groupId>
         <artifactId>xercesImpl</artifactId>

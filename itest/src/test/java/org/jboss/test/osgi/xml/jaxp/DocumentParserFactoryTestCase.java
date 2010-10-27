@@ -21,8 +21,6 @@
  */
 package org.jboss.test.osgi.xml.jaxp;
 
-//$Id$
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -40,7 +38,6 @@ import org.jboss.osgi.xml.DocumentBuilderFactoryImpl;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.test.osgi.xml.XMLParserTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.osgi.framework.Bundle;
@@ -50,34 +47,32 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
- * A test that shows how a third party library, that you cannot change, may use 
+ * A test that shows how a third party library, that you cannot change, may use
  * the JAXP DocumentBuilderFactory API to load the DOM parser from jboss-osgi-xerces.
- * 
+ *
  * The test bundle embeds
  * META-INF/services/javax.xml.parsers.DocumentBuilderFactory
  * and sets the thread context class loader before it calls
- * DocumentBuilderFactory.newInstance() 
- * 
+ * DocumentBuilderFactory.newInstance()
+ *
  * @author thomas.diesler@jboss.com
  * @since 21-Jul-2009
  */
 @RunWith(Arquillian.class)
-public class DocumentParserFactoryTestCase extends XMLParserTestCase
+public class DocumentParserFactoryTestCase
 {
    static String serviceId = "META-INF/services/" + DocumentBuilderFactory.class.getName();
-   
+
    @Inject
    public BundleContext context;
    @Inject
    public Bundle bundle;
-   // [ARQ-234] Define calls to @BeforeClass, @Before, @AfterClass, @After
-   static Bundle xercesBundle;
-   
+
    @Deployment
    public static JavaArchive createdeployment()
    {
       final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "dom-factory.jar");
-      archive.addClasses(DocumentParserFactoryTestCase.class, XMLParserTestCase.class);
+      archive.addClasses(DocumentParserFactoryTestCase.class);
       archive.addResource("simple/simple.xml");
       archive.setManifest(new Asset()
       {
@@ -87,47 +82,37 @@ public class DocumentParserFactoryTestCase extends XMLParserTestCase
             builder.addBundleSymbolicName(archive.getName());
             builder.addBundleManifestVersion(2);
             builder.addExportPackages(DocumentParserFactoryTestCase.class);
-            builder.addImportPackages("org.jboss.arquillian.junit");
-            builder.addImportPackages("org.jboss.shrinkwrap.api", "org.jboss.shrinkwrap.api.asset", "org.jboss.shrinkwrap.api.spec");
-            builder.addImportPackages("javax.inject", "org.junit", "org.junit.runner");
-            builder.addImportPackages("org.osgi.framework", "org.w3c.dom");
             builder.addImportPackages("org.jboss.osgi.xml", "javax.xml.parsers");
             return builder.openStream();
          }
       });
-      
-      // This adds the META-INF/services/javax.xml.parsers.DocumentBuilderFactory 
+
+      // This adds the META-INF/services/javax.xml.parsers.DocumentBuilderFactory
       // resource to the test bundle
       archive.addResource("jaxp/" + serviceId, serviceId);
       return archive;
    }
-   
+
    @Test
    public void testDOMParser() throws Exception
    {
-      if (xercesBundle == null)
-      {
-         xercesBundle = installXercesBundle(context);
-         xercesBundle.start();
-      }
-      
       URL resourceURL = bundle.getResource(serviceId);
       assertNotNull("Resource URL not null", resourceURL);
-      
+
       DocumentBuilderFactory factory;
       ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
       try
       {
-         // Set the TCL to the CL of the test bundle 
+         // Set the TCL to the CL of the test bundle
          Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-         
+
          // The Document builder factory should see
          // META-INF/services/javax.xml.parsers.DocumentBuilderFactory
          // that is embedded in this test bundle
          factory = DocumentBuilderFactory.newInstance();
          assertNotNull("DocumentBuilderFactory not null", factory);
          assertEquals(DocumentBuilderFactoryImpl.class.getName(), factory.getClass().getName());
-         
+
          factory.setNamespaceAware(true);
          factory.setValidating(false);
       }
@@ -135,15 +120,15 @@ public class DocumentParserFactoryTestCase extends XMLParserTestCase
       {
          Thread.currentThread().setContextClassLoader(ctxLoader);
       }
-      
+
       DocumentBuilder domBuilder = factory.newDocumentBuilder();
       URL resURL = context.getBundle().getResource("simple/simple.xml");
       Document dom = domBuilder.parse(resURL.openStream());
       assertNotNull("Document not null", dom);
-      
+
       Element root = dom.getDocumentElement();
       assertEquals("root", root.getLocalName());
-      
+
       Node child = root.getFirstChild();
       assertEquals("child", child.getLocalName());
       assertEquals("content", child.getTextContent());

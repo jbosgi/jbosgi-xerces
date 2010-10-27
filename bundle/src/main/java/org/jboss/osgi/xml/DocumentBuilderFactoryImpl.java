@@ -21,8 +21,6 @@
  */
 package org.jboss.osgi.xml;
 
-//$Id: XercesParserActivator.java 91417 2009-07-20 09:25:44Z thomas.diesler@jboss.com $
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 

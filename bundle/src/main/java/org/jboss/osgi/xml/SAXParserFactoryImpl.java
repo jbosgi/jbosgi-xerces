@@ -24,11 +24,9 @@ package org.jboss.osgi.xml;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 
-//$Id: XercesParserActivator.java 91417 2009-07-20 09:25:44Z thomas.diesler@jboss.com $
-
 /**
  * A SAXParserFactory that gets loaded from this bundle.
- * 
+ *
  * @author thomas.diesler@jboss.com
  * @since 21-Jul-2009
  */

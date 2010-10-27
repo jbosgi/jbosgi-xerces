@@ -21,8 +21,6 @@
  */
 package org.jboss.test.osgi.xml.sax;
 
-//$Id: JMXTestCase.java 91196 2009-07-14 09:41:15Z thomas.diesler@jboss.com $
-
 import static org.junit.Assert.assertEquals;
 
 import java.io.InputStream;
@@ -39,10 +37,8 @@ import org.jboss.osgi.xml.XMLParserCapability;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.jboss.test.osgi.xml.XMLParserTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTracker;
@@ -51,26 +47,23 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * A test that uses a SAX parser to read an XML document.
- * 
+ *
  * @see http://www.osgi.org/javadoc/r4v41/org/osgi/util/xml/XMLParserActivator.html
- * 
+ *
  * @author thomas.diesler@jboss.com
  * @since 21-Jul-2009
  */
 @RunWith(Arquillian.class)
-public class SAXParserTestCase extends XMLParserTestCase
+public class SAXParserTestCase
 {
    @Inject
    public BundleContext context;
 
-   // [ARQ-234] Define calls to @BeforeClass, @Before, @AfterClass, @After
-   static Bundle xercesBundle;
-   
    @Deployment
    public static JavaArchive createdeployment()
    {
       final JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "sax-parser.jar");
-      archive.addClasses(SAXParserTestCase.class, XMLParserTestCase.class);
+      archive.addClasses(SAXParserTestCase.class);
       archive.addResource("simple/simple.xml");
       archive.setManifest(new Asset()
       {
@@ -80,37 +73,27 @@ public class SAXParserTestCase extends XMLParserTestCase
             builder.addBundleSymbolicName(archive.getName());
             builder.addBundleManifestVersion(2);
             builder.addExportPackages(SAXParserTestCase.class);
-            builder.addImportPackages("org.jboss.arquillian.junit");
-            builder.addImportPackages("org.jboss.shrinkwrap.api", "org.jboss.shrinkwrap.api.asset", "org.jboss.shrinkwrap.api.spec");
-            builder.addImportPackages("javax.inject", "org.junit", "org.junit.runner");
-            builder.addImportPackages("org.osgi.framework", "org.osgi.util.tracker");
             builder.addImportPackages("javax.xml.parsers", "org.xml.sax", "org.xml.sax.helpers");
             return builder.openStream();
          }
       });
       return archive;
    }
-   
+
    @Test
    public void testSAXParser() throws Exception
    {
-      if (xercesBundle == null)
-      {
-         xercesBundle = installXercesBundle(context);
-         xercesBundle.start();
-      }
-      
       String filter = "(" + XMLParserCapability.PARSER_PROVIDER + "=" + XMLParserCapability.PROVIDER_JBOSS_OSGI + ")";
       ServiceReference[] srefs = context.getServiceReferences(SAXParserFactory.class.getName(), filter);
       if (srefs == null)
          throw new IllegalStateException("SAXParserFactory not available");
-      
+
       SAXParserFactory factory = (SAXParserFactory)context.getService(srefs[0]);
       factory.setValidating(false);
-      
+
       SAXParser saxParser = factory.newSAXParser();
       URL resURL = context.getBundle().getResource("simple/simple.xml");
-      
+
       SAXHandler saxHandler = new SAXHandler();
       saxParser.parse(resURL.openStream(), saxHandler);
       assertEquals("content", saxHandler.getContent());
@@ -119,12 +102,6 @@ public class SAXParserTestCase extends XMLParserTestCase
    @Test
    public void testDOMParserTracker() throws Exception
    {
-      if (xercesBundle == null)
-      {
-         xercesBundle = installXercesBundle(context);
-         xercesBundle.start();
-      }
-      
       final StringBuffer messages = new StringBuffer();
       ServiceTracker tracker = new ServiceTracker(context, SAXParserFactory.class.getName(), null)
       {
@@ -135,14 +112,14 @@ public class SAXParserTestCase extends XMLParserTestCase
             try
             {
                factory.setValidating(false);
-               
+
                SAXParser saxParser = factory.newSAXParser();
                URL resURL = context.getBundle().getResource("simple/simple.xml");
-               
+
                SAXHandler saxHandler = new SAXHandler();
                saxParser.parse(resURL.openStream(), saxHandler);
                assertEquals("content", saxHandler.getContent());
-               
+
                messages.append("pass");
             }
             catch (Exception ex)
@@ -156,7 +133,7 @@ public class SAXParserTestCase extends XMLParserTestCase
 
       assertEquals("pass", messages.toString());
    }
-   
+
    static class SAXHandler extends DefaultHandler
    {
       private String content;

@@ -32,16 +32,11 @@
   <!-- Limit categories -->
   <!-- ================ -->
 
-  <!-- Show jboss deployer traces 
-  <category name="org.jboss.deployers">
+  <!-- Show jboss osgi traces 
+  <category name="org.jboss.osgi">
     <priority value="TRACE" />
   </category>
   -->
-
-  <!-- Show jboss deployer traces --> 
-  <category name="org.jboss.xb">
-    <priority value="TRACE" />
-  </category>
 
   <!-- ======================= -->
   <!-- Setup the Root category -->
