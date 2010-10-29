@@ -36,11 +36,11 @@
   <!-- Properties -->
   <properties>
     <version.apache.xerces>2.9.1</version.apache.xerces>
-    <version.arquillian>1.0.0.Alpha4.SP3-SNAPSHOT</version.arquillian>
-    <version.jboss.osgi.framework>1.0.0.Alpha12-SNAPSHOT</version.jboss.osgi.framework>
+    <version.arquillian>1.0.0.Alpha4.SP3</version.arquillian>
+    <version.jboss.osgi.framework>1.0.0.Alpha12</version.jboss.osgi.framework>
     <version.jboss.osgi.resolver>1.0.3</version.jboss.osgi.resolver>
-    <version.jboss.osgi.spi>1.0.17-SNAPSHOT</version.jboss.osgi.spi>
-    <version.jboss.osgi.vfs>1.0.4-SNAPSHOT</version.jboss.osgi.vfs>
+    <version.jboss.osgi.spi>1.0.17</version.jboss.osgi.spi>
+    <version.jboss.osgi.vfs>1.0.4</version.jboss.osgi.vfs>
     <!-- version.wutka.dtdparser>1.2.1</version.wutka.dtdparser -->
     <version.xml.resolver>1.2</version.xml.resolver>
     <version.osgi>4.2.0</version.osgi>
