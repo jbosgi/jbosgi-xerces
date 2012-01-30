@@ -26,24 +26,20 @@ import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * A DocumentBuilderFactory that gets loaded from this bundle.
- * 
+ *
  * @author thomas.diesler@jboss.com
  * @since 21-Jul-2009
  */
-public class DocumentBuilderFactoryImpl extends org.apache.xerces.jaxp.DocumentBuilderFactoryImpl
-{
-   @Override
-   public DocumentBuilder newDocumentBuilder() throws ParserConfigurationException
-   {
-      ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
-      try
-      {
-         Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-         return super.newDocumentBuilder();
-      }
-      finally
-      {
-         Thread.currentThread().setContextClassLoader(ctxLoader);
-      }
-   }
+public class DocumentBuilderFactoryImpl extends org.apache.xerces.jaxp.DocumentBuilderFactoryImpl {
+    @Override
+    public DocumentBuilder newDocumentBuilder() throws ParserConfigurationException {
+        ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+            DocumentBuilder domBuilder = super.newDocumentBuilder();
+            return domBuilder;
+        } finally {
+            Thread.currentThread().setContextClassLoader(ctxLoader);
+        }
+    }
 }

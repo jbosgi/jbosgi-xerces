@@ -1,109 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-  <!-- ====================================================================== -->
-  <!--                                                                        -->
-  <!--  JBoss, the OpenSource J2EE webOS                                      -->
-  <!--                                                                        -->
-  <!--  Distributable under LGPL license.                                     -->
-  <!--  See terms of license at http://www.gnu.org.                           -->
-  <!--                                                                        -->
-  <!-- ====================================================================== -->
+<!-- ====================================================================== -->
+<!--                                                                        -->
+<!--  JBoss, the OpenSource J2EE webOS                                      -->
+<!--                                                                        -->
+<!--  Distributable under LGPL license.                                     -->
+<!--  See terms of license at http://www.gnu.org.                           -->
+<!--                                                                        -->
+<!-- ====================================================================== -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <name>JBossOSGi Xerces Bundle</name>
-  
-  <groupId>org.jboss.osgi.xerces</groupId>
-  <artifactId>jboss-osgi-xerces</artifactId>
-  <packaging>bundle</packaging>
+    <parent>
+        <groupId>org.jboss.osgi.xerces</groupId>
+        <artifactId>jbosgi-xerces-parent</artifactId>
+        <version>2.10.0-SNAPSHOT</version>
+    </parent>
 
-  <!-- Parent -->
-  <parent>
+    <name>JBossOSGi Xerces Bundle</name>
+
     <groupId>org.jboss.osgi.xerces</groupId>
-    <artifactId>jboss-osgi-xerces-parent</artifactId>
-    <version>2.9.1.SP8-SNAPSHOT</version>
-  </parent>
+    <artifactId>jbosgi-xerces</artifactId>
+    <packaging>bundle</packaging>
 
-  <!-- Dependencies -->
-  <dependencies>
-    <dependency>
-      <groupId>org.jboss.osgi</groupId>
-      <artifactId>jboss-osgi-spi</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>xerces</groupId>
-      <artifactId>xercesImpl</artifactId>
-    </dependency>
-    <!-- 
-    <dependency>
-      <groupId>wutka-dtdparser</groupId>
-      <artifactId>dtdparser121</artifactId>
-    </dependency>
-    -->
-    <dependency>
-      <groupId>xml-resolver</groupId>
-      <artifactId>xml-resolver</artifactId>
-    </dependency>
+    <!-- Dependencies -->
+    <dependencies>
+        <dependency>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xml-resolver</groupId>
+            <artifactId>xml-resolver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+        </dependency>
 
-    <!-- OSGi Dependencies -->    
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.compendium</artifactId>
-      <scope>provided</scope>
-    </dependency>
-  </dependencies>
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.felix</groupId>
-        <artifactId>maven-bundle-plugin</artifactId>
-        <configuration>
-          <instructions>
-            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
-            <Bundle-Activator>org.jboss.osgi.xml.internal.XMLParserActivatorExt</Bundle-Activator>
-            <Privat-Package>
-              org.jboss.osgi.xml.internal
-            </Privat-Package>
-            <Export-Package>
-              org.jboss.osgi.xml;version=${project.version}
-            </Export-Package>
-            <Import-Package>
-              javax.xml.datatype, 
-              javax.xml.namespace, 
-              javax.xml.parsers, 
-              javax.xml.transform*, 
-              javax.xml.validation, 
-              org.w3c.dom*, 
-              org.xml.sax*,
+        <!-- OSGi Dependencies -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.enterprise</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
-              <!-- import -->
-              org.jboss.logging;version="[3.0,4.0)",
-              org.jboss.osgi.spi.*;version="[1.0,2.0)",
-              org.osgi.framework;version="[1.5,2.0)",
-              org.osgi.util.xml;version="[1.0,2.0)",
-              
-              <!-- ignore -->
-              !sun.io, 
-            </Import-Package>
-            <Embed-Dependency>
-              <!--  dtdparser121;inline=false, -->
-              xercesImpl;inline=false,
-              xml-resolver;inline=false,
-            </Embed-Dependency>
-            <_exportcontents>
-              <!--  com.wutka.dtd;version=${version.wutka.dtdparser}, -->
-              org.apache.xerces.*;version=${version.apache.xerces},
-            </_exportcontents>
-          </instructions>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
-  
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Activator>org.jboss.osgi.xml.internal.XMLParserActivatorExt</Bundle-Activator>
+                        <Privat-Package>
+                            org.jboss.osgi.xml.internal
+                        </Privat-Package>
+                        <Export-Package>
+                            org.jboss.osgi.xml;version=${project.version}
+                        </Export-Package>
+                        <Import-Package>
+                            javax.xml.datatype,
+                            javax.xml.namespace,
+                            javax.xml.parsers,
+                            javax.xml.stream;resolution:=optional,
+                            javax.xml.stream.events;resolution:=optional,
+                            javax.xml.transform;resolution:=optional,
+                            javax.xml.transform.dom;resolution:=optional,
+                            javax.xml.transform.sax;resolution:=optional,
+                            javax.xml.transform.stax;resolution:=optional,
+                            javax.xml.transform.stream;resolution:=optional,
+                            javax.xml.validation;resolution:=optional,
+                            org.apache.xml.resolver*;version="[1.2,2.0)",
+                            org.w3c.dom,
+                            org.w3c.dom.events,
+                            org.w3c.dom.ls,
+                            org.w3c.dom.ranges;resolution:=optional,
+                            org.w3c.dom.traversal;resolution:=optional,
+                            org.w3c.dom.views;resolution:=optional,
+                            org.xml.sax,
+                            org.xml.sax.ext,
+                            org.xml.sax.helpers,
+
+                            <!-- import -->
+                            org.jboss.logging;version="[3.0,4.0)",
+                            org.osgi.framework;version="[1.5,2.0)",
+                            org.osgi.util.xml;version="[1.0,2.0)",
+
+                            <!-- ignore -->
+                            !sun.io
+                        </Import-Package>
+                        <Embed-Dependency>
+                            xercesImpl;inline=false,
+                            xml-apis;inline=false,
+                            xml-resolver;inline=false,
+                        </Embed-Dependency>
+                        <_exportcontents>
+                            org.apache.xml.resolver*;version=1.2,
+                        </_exportcontents>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

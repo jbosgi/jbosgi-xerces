@@ -21,12 +21,6 @@
  */
 package org.jboss.osgi.xml.internal;
 
-import java.util.Arrays;
-import java.util.Hashtable;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.SAXParserFactory;
-
 import org.jboss.logging.Logger;
 import org.jboss.osgi.xml.XMLParserCapability;
 import org.osgi.framework.BundleContext;
@@ -35,134 +29,116 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.xml.XMLParserActivator;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.SAXParserFactory;
+import java.util.Arrays;
+import java.util.Hashtable;
+
 /**
  * Activate the XML parser using {@link XMLParserActivatorExt}
  *
  * @author thomas.diesler@jboss.com
  * @since 29-Apr-2009
  */
-public class XMLParserActivatorExt extends XMLParserActivator
-{
-   // Provide logging
-   private static final Logger log = Logger.getLogger(XMLParserActivatorExt.class);
+public class XMLParserActivatorExt extends XMLParserActivator {
+    // Provide logging
+    private static final Logger log = Logger.getLogger(XMLParserActivatorExt.class);
 
-   public void start(BundleContext context) throws Exception
-   {
-      super.start(context);
+    public void start(BundleContext context) throws Exception {
+        super.start(context);
+        logSAXParserFactory(context);
+        logDOMParserFactory(context);
+    }
 
-      logSAXParserFactory(context);
-      logDOMParserFactory(context);
-   }
+    @Override
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public void setDOMProperties(DocumentBuilderFactory factory, Hashtable props) {
+        super.setDOMProperties(factory, props);
 
-   @Override
-   @SuppressWarnings({ "unchecked", "rawtypes" })
-   public void setDOMProperties(DocumentBuilderFactory factory, Hashtable props)
-   {
-      super.setDOMProperties(factory, props);
+        boolean xinclude = true;
+        Boolean validating = (Boolean) props.get(PARSER_VALIDATING);
+        Boolean namespaceaware = (Boolean) props.get(PARSER_NAMESPACEAWARE);
 
-      boolean xinclude = true;
-      Boolean validating = (Boolean)props.get(PARSER_VALIDATING);
-      Boolean namespaceaware = (Boolean)props.get(PARSER_NAMESPACEAWARE);
+        // check if this parser can be configured to be xinclude aware
+        factory.setValidating(validating);
+        factory.setNamespaceAware(namespaceaware);
+        factory.setXIncludeAware(true);
+        try {
+            factory.newDocumentBuilder();
+        } catch (Exception pce_inc) {
+            xinclude = false;
+        }
 
-      // check if this parser can be configured to be xinclude aware
-      factory.setValidating(validating);
-      factory.setNamespaceAware(namespaceaware);
-      factory.setXIncludeAware(true);
-      try
-      {
-         factory.newDocumentBuilder();
-      }
-      catch (Exception pce_inc)
-      {
-         xinclude = false;
-      }
+        // set the factory values
+        factory.setXIncludeAware(xinclude);
 
-      // set the factory values
-      factory.setXIncludeAware(xinclude);
+        // set the OSGi service properties
+        props.put(XMLParserCapability.PARSER_XINCLUDEAWARE, new Boolean(xinclude));
+        props.put(XMLParserCapability.PARSER_PROVIDER, XMLParserCapability.PROVIDER_JBOSS_OSGI);
+    }
 
-      // set the OSGi service properties
-      props.put(XMLParserCapability.PARSER_XINCLUDEAWARE, new Boolean(xinclude));
-      props.put(XMLParserCapability.PARSER_PROVIDER, XMLParserCapability.PROVIDER_JBOSS_OSGI);
-   }
+    @Override
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public void setSAXProperties(SAXParserFactory factory, Hashtable props) {
+        super.setSAXProperties(factory, props);
 
-   @Override
-   @SuppressWarnings({ "unchecked", "rawtypes" })
-   public void setSAXProperties(SAXParserFactory factory, Hashtable props)
-   {
-      super.setSAXProperties(factory, props);
+        boolean xinclude = true;
+        Boolean validating = (Boolean) props.get(PARSER_VALIDATING);
+        Boolean namespaceaware = (Boolean) props.get(PARSER_NAMESPACEAWARE);
 
-      boolean xinclude = true;
-      Boolean validating = (Boolean)props.get(PARSER_VALIDATING);
-      Boolean namespaceaware = (Boolean)props.get(PARSER_NAMESPACEAWARE);
+        // check if this parser can be configured to be xinclude aware
+        factory.setValidating(validating);
+        factory.setNamespaceAware(namespaceaware);
+        factory.setXIncludeAware(true);
+        try {
+            factory.newSAXParser();
+        } catch (Exception pce_inc) {
+            xinclude = false;
+        }
 
-      // check if this parser can be configured to be xinclude aware
-      factory.setValidating(validating);
-      factory.setNamespaceAware(namespaceaware);
-      factory.setXIncludeAware(true);
-      try
-      {
-         factory.newSAXParser();
-      }
-      catch (Exception pce_inc)
-      {
-         xinclude = false;
-      }
+        // set the factory values
+        factory.setXIncludeAware(xinclude);
 
-      // set the factory values
-      factory.setXIncludeAware(xinclude);
+        // set the OSGi service properties
+        props.put(XMLParserCapability.PARSER_XINCLUDEAWARE, new Boolean(xinclude));
+        props.put(XMLParserCapability.PARSER_PROVIDER, XMLParserCapability.PROVIDER_JBOSS_OSGI);
+    }
 
-      // set the OSGi service properties
-      props.put(XMLParserCapability.PARSER_XINCLUDEAWARE, new Boolean(xinclude));
-      props.put(XMLParserCapability.PARSER_PROVIDER, XMLParserCapability.PROVIDER_JBOSS_OSGI);
-   }
+    private void logSAXParserFactory(BundleContext context) throws InvalidSyntaxException {
+        ServiceReference[] saxRefs = context.getServiceReferences(SAXParserFactory.class.getName(), null);
+        if (saxRefs != null) {
+            for (ServiceReference sref : saxRefs) {
+                Object factory = context.getService(sref);
+                log.debug("SAXParserFactory: " + factory.getClass().getName());
 
-   private void logSAXParserFactory(BundleContext context) throws InvalidSyntaxException
-   {
-      ServiceReference[] saxRefs = context.getServiceReferences(SAXParserFactory.class.getName(), null);
-      if (saxRefs != null)
-      {
-         for (ServiceReference sref : saxRefs)
-         {
-            Object factory = context.getService(sref);
-            log.debug("SAXParserFactory: " + factory.getClass().getName());
-
-            for (String key : sref.getPropertyKeys())
-            {
-               Object value = sref.getProperty(key);
-               if (key.equals(Constants.OBJECTCLASS))
-                  value = Arrays.asList((String[])value);
-               log.debug("   " + key + "=" + value);
+                for (String key : sref.getPropertyKeys()) {
+                    Object value = sref.getProperty(key);
+                    if (key.equals(Constants.OBJECTCLASS))
+                        value = Arrays.asList((String[]) value);
+                    log.debug("   " + key + "=" + value);
+                }
             }
-         }
-      }
-      else
-      {
-         log.warn("No SAXParserFactory registered");
-      }
-   }
+        } else {
+            log.warn("No SAXParserFactory registered");
+        }
+    }
 
-   private void logDOMParserFactory(BundleContext context) throws InvalidSyntaxException
-   {
-      ServiceReference[] domRefs = context.getServiceReferences(DocumentBuilderFactory.class.getName(), null);
-      if (domRefs != null)
-      {
-         for (ServiceReference sref : domRefs)
-         {
-            Object factory = context.getService(sref);
-            log.debug("DocumentBuilderFactory: " + factory.getClass().getName());
+    private void logDOMParserFactory(BundleContext context) throws InvalidSyntaxException {
+        ServiceReference[] domRefs = context.getServiceReferences(DocumentBuilderFactory.class.getName(), null);
+        if (domRefs != null) {
+            for (ServiceReference sref : domRefs) {
+                Object factory = context.getService(sref);
+                log.debug("DocumentBuilderFactory: " + factory.getClass().getName());
 
-            for (String key : sref.getPropertyKeys())
-            {
-               Object value = sref.getProperty(key);
-               if (key.equals(Constants.OBJECTCLASS))
-                  value = Arrays.asList((String[])value);
-               log.debug("   " + key + "=" + value);
+                for (String key : sref.getPropertyKeys()) {
+                    Object value = sref.getProperty(key);
+                    if (key.equals(Constants.OBJECTCLASS))
+                        value = Arrays.asList((String[]) value);
+                    log.debug("   " + key + "=" + value);
+                }
             }
-         }
-      }
-      else
-      {
-         log.warn("No DocumentBuilderFactory registered");
-      }
-   }
+        } else {
+            log.warn("No DocumentBuilderFactory registered");
+        }
+    }
 }

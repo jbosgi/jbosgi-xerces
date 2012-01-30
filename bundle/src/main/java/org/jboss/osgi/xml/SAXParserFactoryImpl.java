@@ -30,20 +30,15 @@ import javax.xml.parsers.SAXParser;
  * @author thomas.diesler@jboss.com
  * @since 21-Jul-2009
  */
-public class SAXParserFactoryImpl extends org.apache.xerces.jaxp.SAXParserFactoryImpl
-{
-   @Override
-   public SAXParser newSAXParser() throws ParserConfigurationException
-   {
-      ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
-      try
-      {
-         Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
-         return super.newSAXParser();
-      }
-      finally
-      {
-         Thread.currentThread().setContextClassLoader(ctxLoader);
-      }
-   }
+public class SAXParserFactoryImpl extends org.apache.xerces.jaxp.SAXParserFactoryImpl {
+    @Override
+    public SAXParser newSAXParser() throws ParserConfigurationException {
+        ClassLoader ctxLoader = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+            return super.newSAXParser();
+        } finally {
+            Thread.currentThread().setContextClassLoader(ctxLoader);
+        }
+    }
 }

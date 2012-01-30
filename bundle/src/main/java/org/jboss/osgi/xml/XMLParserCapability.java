@@ -23,43 +23,30 @@ package org.jboss.osgi.xml;
 
 import javax.xml.parsers.SAXParserFactory;
 
-import org.jboss.osgi.spi.capability.Capability;
-import org.jboss.osgi.spi.capability.CompendiumCapability;
-
 /**
  * Adds the XML parser capability.
- *
+ * <p/>
  * It is ignored if the {@link SAXParserFactory} is already registered.
- *
+ * <p/>
  * Installed bundles: jboss-osgi-xerces.jar
  *
  * @author thomas.diesler@jboss.com
  * @since 05-May-2009
  */
-public class XMLParserCapability extends Capability
-{
-   /*
+public class XMLParserCapability {
+    /*
     * Service property key for the 'provider' of this service.
     */
-   public static final String PARSER_PROVIDER = "provider";
-   /*
+    public static final String PARSER_PROVIDER = "provider";
+    /*
     * Service property value for the 'provider' of this service.
     * The value is <code>jboss.osgi</code>.
     */
-   public static final String PROVIDER_JBOSS_OSGI = "jboss";
-   /*
+    public static final String PROVIDER_JBOSS_OSGI = "jboss";
+    /*
     * Service property specifying if factory is configured to support XInclude aware parsers.
     * The value is of type <code>Boolean</code>.
     */
-   public static final String PARSER_XINCLUDEAWARE = "parser.xincludeAware";
+    public static final String PARSER_XINCLUDEAWARE = "parser.xincludeAware";
 
-   public XMLParserCapability()
-   {
-      super(SAXParserFactory.class.getName());
-      setFilter("(" + PARSER_PROVIDER + "=" + PROVIDER_JBOSS_OSGI + ")");
-
-      addDependency(new CompendiumCapability());
-
-      addBundle("bundles/jboss-osgi-xerces.jar");
-   }
 }
