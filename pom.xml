@@ -40,7 +40,7 @@
         <version.jboss.arquillian.osgi>1.0.0.CR6</version.jboss.arquillian.osgi>
         <version.jboss.logging>3.1.0.CR2</version.jboss.logging>
         <version.jboss.logmanager>1.2.0.GA</version.jboss.logmanager>
-        <version.jboss.osgi.framework>1.1.0</version.jboss.osgi.framework>
+        <version.jboss.osgi.framework>1.1.1</version.jboss.osgi.framework>
         <version.xml.apis>1.4.01</version.xml.apis>
         <version.xml.resolver>1.2</version.xml.resolver>
         <version.osgi>4.2.0</version.osgi>
