@@ -21,18 +21,20 @@
  */
 package org.jboss.osgi.xml.internal;
 
-import org.jboss.logging.Logger;
+import static org.jboss.osgi.xml.internal.XMLLogger.LOGGER;
+
+import java.util.Arrays;
+import java.util.Hashtable;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.jboss.osgi.xml.XMLParserCapability;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.xml.XMLParserActivator;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.SAXParserFactory;
-import java.util.Arrays;
-import java.util.Hashtable;
 
 /**
  * Activate the XML parser using {@link XMLParserActivatorExt}
@@ -41,8 +43,6 @@ import java.util.Hashtable;
  * @since 29-Apr-2009
  */
 public class XMLParserActivatorExt extends XMLParserActivator {
-    // Provide logging
-    private static final Logger log = Logger.getLogger(XMLParserActivatorExt.class);
 
     public void start(BundleContext context) throws Exception {
         super.start(context);
@@ -109,17 +109,18 @@ public class XMLParserActivatorExt extends XMLParserActivator {
         if (saxRefs != null) {
             for (ServiceReference sref : saxRefs) {
                 Object factory = context.getService(sref);
-                log.debug("SAXParserFactory: " + factory.getClass().getName());
+                LOGGER.debugf("SAXParserFactory: %s", factory.getClass().getName());
 
                 for (String key : sref.getPropertyKeys()) {
                     Object value = sref.getProperty(key);
-                    if (key.equals(Constants.OBJECTCLASS))
+                    if (key.equals(Constants.OBJECTCLASS)) {
                         value = Arrays.asList((String[]) value);
-                    log.debug("   " + key + "=" + value);
+                    }
+                    LOGGER.debugf("   %s=%s", key, value);
                 }
             }
         } else {
-            log.warn("No SAXParserFactory registered");
+            LOGGER.warnNoSAXParserFactoryRegistered();
         }
     }
 
@@ -128,17 +129,18 @@ public class XMLParserActivatorExt extends XMLParserActivator {
         if (domRefs != null) {
             for (ServiceReference sref : domRefs) {
                 Object factory = context.getService(sref);
-                log.debug("DocumentBuilderFactory: " + factory.getClass().getName());
+                LOGGER.debugf("DocumentBuilderFactory: %s", factory.getClass().getName());
 
                 for (String key : sref.getPropertyKeys()) {
                     Object value = sref.getProperty(key);
-                    if (key.equals(Constants.OBJECTCLASS))
+                    if (key.equals(Constants.OBJECTCLASS)) {
                         value = Arrays.asList((String[]) value);
-                    log.debug("   " + key + "=" + value);
+                    }
+                    LOGGER.debugf("   %s=%s", key, value);
                 }
             }
         } else {
-            log.warn("No DocumentBuilderFactory registered");
+            LOGGER.warnNoDocumentBuilderFactoryRegistered();
         }
     }
 }

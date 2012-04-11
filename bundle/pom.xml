@@ -20,7 +20,6 @@
 
     <name>JBossOSGi Xerces Bundle</name>
 
-    <groupId>org.jboss.osgi.xerces</groupId>
     <artifactId>jbosgi-xerces</artifactId>
     <packaging>bundle</packaging>
 
@@ -45,7 +44,12 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- OSGi Dependencies -->
+        <!-- Provided Dependencies -->
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging-processor</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
