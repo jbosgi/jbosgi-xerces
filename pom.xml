@@ -22,7 +22,7 @@
 
 	<groupId>org.jboss.osgi.xerces</groupId>
 	<artifactId>jbosgi-xerces-parent</artifactId>
-	<version>3.1.0.CR1</version>
+	<version>3.1.0.CR2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<!-- Source Control -->
